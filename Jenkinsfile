@@ -1,33 +1,30 @@
 pipeline {
-    
     agent any
 
     stages {
         stage('Build') {
             steps {
-               echo "Building application..."
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo "Runnig tests"
+                echo 'Building...'
             }
         }
     }
-    
-    post{
-        success{
-            emailText {
-                to: 'divyatest2302@gmail.com',
-                subject: "SUCCESS '${env.JOB_NAME}' #${env.BUILD_NUMBER}",
-                body: """
-                <h3> BUILD SUCESSFUL! </h3>
-                <p>Job: ${env.JOB_NAME} </p>
-                <p> Build number: ${env.BUILD_NUMBER} </p>
+
+    post {
+        success {
+            emailext (
+                subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Build completed successfully!",
+                to: 'akashanchaneyalu@gmail.com',
                 mimeType: 'text/html'
-                """,
-            }
+            )
+        }
+        failure {
+            emailext (
+                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Please check the Jenkins logs for details.",
+                to: 'akashanchaneyalu@gmail.com',
+                mimeType: 'text/html'
+            )
         }
     }
 }
